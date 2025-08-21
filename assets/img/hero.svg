@@ -1,18 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 420" preserveAspectRatio="xMidYMid slice">
-  <defs>
-    <linearGradient id="gold" x1="0" x2="1">
-      <stop offset="0" stop-color="#D4AF37"/><stop offset="1" stop-color="#f7efc3"/>
-    </linearGradient>
-    <filter id="soft"><feGaussianBlur stdDeviation="8" /></filter>
-  </defs>
-  <rect width="600" height="420" fill="white"/>
-  <g filter="url(#soft)" opacity="0.6">
-    <ellipse cx="200" cy="320" rx="180" ry="60" fill="url(#gold)"/>
-    <ellipse cx="440" cy="120" rx="150" ry="50" fill="url(#gold)"/>
-  </g>
-  <g transform="translate(140,80)">
-    <rect x="0" y="0" width="320" height="260" rx="24" fill="white" stroke="#D4AF37" stroke-width="3"/>
-    <circle cx="160" cy="130" r="95" fill="none" stroke="#D4AF37" stroke-width="10"/>
-    <rect x="150" y="45" width="20" height="85" fill="#B30029"/>
-  </g>
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 420'>
+  <defs><linearGradient id='gold' x1='0' x2='1'><stop offset='0' stop-color='#D4AF37'/><stop offset='1' stop-color='#f7efc3'/></linearGradient>
+  <filter id='soft'><feGaussianBlur stdDeviation='8'/></filter></defs>
+  <rect width='600' height='420' fill='white'/>
+  <g filter='url(#soft)' opacity='.6'>
+    <ellipse cx='200' cy='320' rx='180' ry='60' fill='url(#gold)'/>
+    <ellipse cx='440' cy='120' rx='150' ry='50' fill='url(#gold)'/></g>
+  <g transform='translate(140,80)'>
+    <rect x='0' y='0' width='320' height='260' rx='24' fill='white' stroke='#D4AF37' stroke-width='3'/>
+    <circle cx='160' cy='130' r='95' fill='none' stroke='#D4AF37' stroke-width='10'/>
+    <rect x='150' y='45' width='20' height='85' fill='#B30029'/></g>
 </svg>

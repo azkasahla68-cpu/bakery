@@ -3,123 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Cartier-inspired luxury storefront with modern web features." />
-  <title>Cartier – Luxury Boutique</title>
-  <link rel="preload" href="assets/css/style.css" as="style" />
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <title>Cartier Luxury Boutique</title>
+  <meta name="description" content="Demo storefront Cartier-style dengan slider produk, keranjang, testimoni, serta kritik & saran." />
   <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="#home" aria-label="Cartier Home">
-      <img src="assets/img/logo.svg" alt="Cartier logo" width="32" height="32" />
+      <img src="assets/img/logo.svg" alt="Logo Cartier" width="32" height="32" />
       <span>Cartier</span>
     </a>
-    <nav aria-label="Utama">
+    <nav>
       <a href="#koleksi">Koleksi</a>
       <a href="#testimoni">Testimoni</a>
       <a href="#kontak">Kontak</a>
     </nav>
-    <button id="cartButton" class="btn btn-outline" aria-label="Buka keranjang" title="Keranjang">
-      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>
-      </svg>
-      <span id="cartCount" class="badge" aria-live="polite">0</span>
+    <button id="cartButton" class="btn btn-outline" aria-label="Buka Keranjang">
+      Keranjang <span id="cartCount" class="badge">0</span>
     </button>
   </header>
 
   <main id="home">
-    <!-- Hero -->
     <section class="hero">
       <div class="hero-copy">
         <h1>Elegansi Abadi</h1>
-        <p>Sentuhan kemewahan dalam setiap detail. Koleksi pilihan terlaris kami tersedia untuk Anda.</p>
+        <p>Perpaduan <strong>gold &amp; white</strong> beraksen <strong>merah</strong> yang ikonik. Temukan koleksi terlaris pilihan.</p>
         <div class="cta-row">
           <a class="btn btn-gold" href="#koleksi">Lihat Koleksi</a>
           <button class="btn btn-ghost" id="checkoutTop">Checkout</button>
         </div>
       </div>
-      <div class="hero-art" role="img" aria-label="Perhiasan emas dengan latar putih">
-        <img src="assets/img/hero.svg" alt="" />
+      <div class="hero-art">
+        <img src="assets/img/hero.svg" alt="Hero Cartier Luxury" />
       </div>
     </section>
 
-    <!-- Slider Produk Terlaris (maks 5) -->
     <section id="koleksi" class="section">
       <h2>Produk Terlaris</h2>
-      <div class="slider" role="region" aria-label="Slider produk terlaris">
+      <div class="slider">
         <button class="nav prev" aria-label="Sebelumnya">&#10094;</button>
-        <div class="track" id="productTrack">
-          <!-- Cards injected by JS -->
-        </div>
+        <div id="sliderTrack" class="track"></div>
         <button class="nav next" aria-label="Berikutnya">&#10095;</button>
       </div>
     </section>
 
-    <!-- Testimoni -->
     <section id="testimoni" class="section">
       <h2>Testimoni Pelanggan</h2>
-      <ul id="testimonialList" class="testimonials" aria-live="polite">
-        <!-- Testimonials injected by JS -->
-      </ul>
-
+      <ul id="testimonialList" class="testimonials"></ul>
       <div class="card form">
-        <h3>Tulis Testimoni Anda</h3>
-        <form id="testimonialForm" aria-label="Form input testimoni pelanggan">
+        <h3>Tulis Testimoni</h3>
+        <form id="testimonialForm">
           <label for="nama">Nama</label>
           <input id="nama" name="nama" type="text" placeholder="Nama Anda" required />
           <label for="pesan">Pesan</label>
           <textarea id="pesan" name="pesan" rows="4" placeholder="Bagikan pengalaman Anda" required></textarea>
-          <button class="btn btn-gold" type="submit">Kirim Testimoni</button>
+          <button class="btn btn-gold" type="submit">Kirim</button>
         </form>
       </div>
     </section>
 
-    <!-- Kritik & Saran -->
     <section id="kontak" class="section">
       <h2>Kritik &amp; Saran</h2>
       <div class="card form">
-        <form id="feedbackForm" aria-label="Form kritik dan saran">
+        <form id="feedbackForm">
           <label for="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="email@contoh.com" required />
+          <input id="email" type="email" placeholder="email@contoh.com" required />
           <label for="subjek">Subjek</label>
-          <input id="subjek" name="subjek" type="text" placeholder="Subjek pesan" required />
+          <input id="subjek" type="text" placeholder="Subjek pesan" required />
           <label for="isi">Pesan</label>
-          <textarea id="isi" name="isi" rows="5" placeholder="Tulis kritik & saran Anda" required></textarea>
+          <textarea id="isi" rows="5" placeholder="Tulis kritik & saran Anda" required></textarea>
           <button class="btn btn-ghost" type="submit">Kirim</button>
         </form>
       </div>
 
       <address class="address">
-        <strong>Alamat Toko</strong><br/>
+        <strong>Alamat Toko</strong><br />
         Jl. Senopati, Jakarta
       </address>
     </section>
   </main>
 
-  <!-- Drawer Keranjang -->
-  <aside id="cartDrawer" class="cart" aria-hidden="true" aria-label="Keranjang Belanja">
+  <aside id="cartDrawer" class="cart" aria-hidden="true">
     <div class="cart-header">
       <h3>Keranjang</h3>
-      <button id="closeCart" class="icon-btn" aria-label="Tutup keranjang">&times;</button>
+      <button id="closeCart" class="icon-btn" aria-label="Tutup">&times;</button>
     </div>
-    <ul id="cartItems" class="cart-items">
-      <!-- items injected -->
-    </ul>
+    <ul id="cartItems" class="cart-items"></ul>
     <div class="cart-footer">
       <div class="totals">
-        <span>Total</span>
-        <strong id="cartTotal">Rp0</strong>
+        <span>Total</span> <strong id="cartTotal">Rp0</strong>
       </div>
       <button id="checkoutButton" class="btn btn-gold">Checkout</button>
     </div>
   </aside>
 
   <footer class="footer">
-    <small>&copy; 2025 Cartier — Demo Boutique. Dibuat untuk kebutuhan portofolio & edukasi.</small>
+    <small>&copy; 2025 Cartier — Demo butik untuk portofolio.</small>
   </footer>
 
-  <script>window.BRAND = { primary: "#D4AF37", accent: "#B30029" };</script>
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>
