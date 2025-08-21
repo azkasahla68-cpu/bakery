@@ -1,143 +1,125 @@
-
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Levant Boulangerie — Bakery Modern</title>
-  <meta name="description" content="Levant Boulangerie: roti artisan, pastry klasik Prancis, & kopi hangat.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  <link rel="icon" href="assets/img/logo.svg">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Cartier-inspired luxury storefront with modern web features." />
+  <title>Cartier – Luxury Boutique</title>
+  <link rel="preload" href="assets/css/style.css" as="style" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
 </head>
 <body>
-<header>
-  <div class="container nav">
-    <div class="brand">
-      <img src="assets/img/logo.svg" alt="Levant Boulangerie logo">
-      <h1>Levant Boulangerie</h1>
-      <span class="badge">Ungu • Emas</span>
-    </div>
-    <div class="actions">
-      <button id="open-cart" class="btn gold" aria-label="Buka keranjang">
-        🧺 Keranjang <span id="cart-badge" class="badge" style="margin-left:.35rem">0</span>
-      </button>
-      <a class="btn ghost" href="#alamat">Alamat</a>
-    </div>
-  </div>
-</header>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Cartier Home">
+      <img src="assets/img/logo.svg" alt="Cartier logo" width="32" height="32" />
+      <span>Cartier</span>
+    </a>
+    <nav aria-label="Utama">
+      <a href="#koleksi">Koleksi</a>
+      <a href="#testimoni">Testimoni</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+    <button id="cartButton" class="btn btn-outline" aria-label="Buka keranjang" title="Keranjang">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>
+      </svg>
+      <span id="cartCount" class="badge" aria-live="polite">0</span>
+    </button>
+  </header>
 
-<main>
-  <section class="hero">
-    <div class="container hero-grid">
-      <div>
-        <span class="badge">Bakery artisan</span>
-        <h2>Rasakan <em>kelopak flaky</em> dan <em>aroma butter</em> dalam tiap gigitan.</h2>
-        <p>Dipanggang segar setiap pagi—menggabungkan teknik boulangerie klasik dengan sentuhan modern. Pesan online, ambil di toko, atau nikmati langsung.</p>
-        <div class="callouts">
-          <div class="kpi"><strong>5</strong> Produk terlaris</div>
-          <div class="kpi"><strong>24h</strong> Fermentasi sourdough</div>
-          <div class="kpi"><strong>100%</strong> Butter premium</div>
+  <main id="home">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Elegansi Abadi</h1>
+        <p>Sentuhan kemewahan dalam setiap detail. Koleksi pilihan terlaris kami tersedia untuk Anda.</p>
+        <div class="cta-row">
+          <a class="btn btn-gold" href="#koleksi">Lihat Koleksi</a>
+          <button class="btn btn-ghost" id="checkoutTop">Checkout</button>
         </div>
       </div>
-      <div class="card">
-        <div class="slider">
-          <div class="slides"></div>
-          <button class="ctrl prev" aria-label="Sebelumnya">‹</button>
-          <button class="ctrl next" aria-label="Berikutnya">›</button>
-        </div>
+      <div class="hero-art" role="img" aria-label="Perhiasan emas dengan latar putih">
+        <img src="assets/img/hero.svg" alt="" />
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="section container">
-    <h3>Produk Kami</h3>
-    <div id="product-grid" class="grid"></div>
-  </section>
-
-  <section id="testimoni" class="section container">
-    <h3>Testimoni Pelanggan</h3>
-    <div id="testimonials" class="grid" style="grid-template-columns:repeat(3,1fr)"></div>
-    <div class="card" style="margin-top:1rem">
-      <h4>Kirim Testimoni Anda</h4>
-      <form id="testi-form" class="form">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
-          <label>Nama<input name="name" placeholder="Nama Anda"/></label>
-          <label>Rating
-            <input name="rating" type="number" min="1" max="5" value="5"/>
-          </label>
+    <!-- Slider Produk Terlaris (maks 5) -->
+    <section id="koleksi" class="section">
+      <h2>Produk Terlaris</h2>
+      <div class="slider" role="region" aria-label="Slider produk terlaris">
+        <button class="nav prev" aria-label="Sebelumnya">&#10094;</button>
+        <div class="track" id="productTrack">
+          <!-- Cards injected by JS -->
         </div>
-        <label>Pesan
-          <textarea name="text" rows="3" placeholder="Ceritakan pengalaman Anda..."></textarea>
-        </label>
-        <button class="btn gold" type="submit">Kirim Testimoni</button>
-      </form>
-    </div>
-  </section>
+        <button class="nav next" aria-label="Berikutnya">&#10095;</button>
+      </div>
+    </section>
 
-  <section id="kritik" class="section container">
-    <h3>Kritik & Saran</h3>
-    <p class="small">Kami selalu ingin lebih baik. Tinggalkan masukan Anda di sini.</p>
-    <form id="feedback-form" class="form card">
-      <label>Nama
-        <input name="name" placeholder="Nama (opsional)"/>
-      </label>
-      <label>Email
-        <input name="email" type="email" placeholder="email@contoh.com (opsional)"/>
-      </label>
-      <label>Pesan
-        <textarea name="message" rows="4" placeholder="Tulis kritik & saran Anda..."></textarea>
-      </label>
-      <button class="btn" type="submit">Kirim</button>
-      <div class="notice">Data formulir disimpan lokal di perangkat Anda untuk demo.</div>
-    </form>
-  </section>
+    <!-- Testimoni -->
+    <section id="testimoni" class="section">
+      <h2>Testimoni Pelanggan</h2>
+      <ul id="testimonialList" class="testimonials" aria-live="polite">
+        <!-- Testimonials injected by JS -->
+      </ul>
 
-  <section id="alamat" class="section container">
-    <h3>Alamat Toko</h3>
-    <div class="card">
-      <p>Levant Boulangerie — Jl. manggarai 77, Jakarta.</p>
-      <p class="small">Buka setiap hari 07:00–21:00 WIB</p>
-      <a class="btn gold" href="https://maps.google.com/?q=Jl. manggarai 77 Jakarta" target="_blank" rel="noopener">Lihat di Google Maps</a>
-    </div>
-  </section>
-</main>
+      <div class="card form">
+        <h3>Tulis Testimoni Anda</h3>
+        <form id="testimonialForm" aria-label="Form input testimoni pelanggan">
+          <label for="nama">Nama</label>
+          <input id="nama" name="nama" type="text" placeholder="Nama Anda" required />
+          <label for="pesan">Pesan</label>
+          <textarea id="pesan" name="pesan" rows="4" placeholder="Bagikan pengalaman Anda" required></textarea>
+          <button class="btn btn-gold" type="submit">Kirim Testimoni</button>
+        </form>
+      </div>
+    </section>
 
-<footer class="footer">
-  <div class="container">
-    <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-      <div>© <span id="year"></span> Levant Boulangerie. All rights reserved.</div>
-      <div class="small">Theme: Ungu & Emas • Built with HTML, CSS, JS</div>
-    </div>
-  </div>
-</footer>
+    <!-- Kritik & Saran -->
+    <section id="kontak" class="section">
+      <h2>Kritik &amp; Saran</h2>
+      <div class="card form">
+        <form id="feedbackForm" aria-label="Form kritik dan saran">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="email@contoh.com" required />
+          <label for="subjek">Subjek</label>
+          <input id="subjek" name="subjek" type="text" placeholder="Subjek pesan" required />
+          <label for="isi">Pesan</label>
+          <textarea id="isi" name="isi" rows="5" placeholder="Tulis kritik & saran Anda" required></textarea>
+          <button class="btn btn-ghost" type="submit">Kirim</button>
+        </form>
+      </div>
 
-<div id="cart-modal" class="modal" aria-hidden="true">
-  <div class="panel">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
-      <h4>Keranjang Belanja</h4>
-      <button id="close-cart" class="btn ghost" aria-label="Tutup">Tutup</button>
-    </div>
-    <table class="table">
-      <thead>
-        <tr><th>Produk</th><th>Harga</th><th>Qty</th><th>Subtotal</th><th>Aksi</th></tr>
-      </thead>
-      <tbody id="cart-body"></tbody>
-    </table>
-    <div class="total">
-      <strong>Total:</strong> <strong id="cart-total">Rp 0</strong>
-    </div>
-    <div style="display:flex;justify-content:flex-end;gap:.5rem;margin-top:.75rem">
-      <button id="checkout" class="btn gold">Checkout</button>
-    </div>
-  </div>
-</div>
+      <address class="address">
+        <strong>Alamat Toko</strong><br/>
+        Jl. Senopati, Jakarta
+      </address>
+    </section>
+  </main>
 
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <!-- Drawer Keranjang -->
+  <aside id="cartDrawer" class="cart" aria-hidden="true" aria-label="Keranjang Belanja">
+    <div class="cart-header">
+      <h3>Keranjang</h3>
+      <button id="closeCart" class="icon-btn" aria-label="Tutup keranjang">&times;</button>
+    </div>
+    <ul id="cartItems" class="cart-items">
+      <!-- items injected -->
+    </ul>
+    <div class="cart-footer">
+      <div class="totals">
+        <span>Total</span>
+        <strong id="cartTotal">Rp0</strong>
+      </div>
+      <button id="checkoutButton" class="btn btn-gold">Checkout</button>
+    </div>
+  </aside>
 
-<script src="assets/js/app.js"></script>
-<script>document.getElementById('year').textContent = new Date().getFullYear()</script>
+  <footer class="footer">
+    <small>&copy; 2025 Cartier — Demo Boutique. Dibuat untuk kebutuhan portofolio & edukasi.</small>
+  </footer>
+
+  <script>window.BRAND = { primary: "#D4AF37", accent: "#B30029" };</script>
+  <script src="assets/js/app.js" defer></script>
 </body>
 </html>

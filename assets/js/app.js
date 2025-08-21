@@ -1,198 +1,169 @@
+// Simple product data (max 5 items)
+const PRODUCTS = [
+  { id: "P001", name: "Ballon Bleu Watch", price: 128_000_000, img: "watch.svg" },
+  { id: "P002", name: "Love Bracelet", price: 95_000_000, img: "bracelet.svg" },
+  { id: "P003", name: "Juste Un Clou Ring", price: 52_000_000, img: "ring.svg" },
+  { id: "P004", name: "Tank Française Watch", price: 115_000_000, img: "watch2.svg" },
+  { id: "P005", name: "Diamants Légers Necklace", price: 75_000_000, img: "necklace.svg" },
+];
 
-// Levant Boulangerie — Vanilla JS
+// Utilities
+const rp = (n)=> new Intl.NumberFormat('id-ID', {style:'currency', currency:'IDR', maximumFractionDigits:0}).format(n);
+const qs = (s, el=document)=> el.querySelector(s);
+const qsa = (s, el=document)=> [...el.querySelectorAll(s)];
+
+// Build slider cards
+const track = qs('#productTrack');
+PRODUCTS.forEach(p => {
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.innerHTML = `
+    <img class="product-img" src="assets/img/${p.img}" alt="${p.name}" loading="lazy"/>
+    <div class="meta">
+      <h3>${p.name}</h3>
+      <div class="price">${rp(p.price)}</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-gold" data-add="${p.id}">Tambahkan ke Keranjang</button>
+      <button class="btn btn-ghost" data-buy="${p.id}">Beli Sekarang</button>
+    </div>
+  `;
+  track.appendChild(card);
+});
+
+// Slider controls
+const prev = qs('.slider .prev');
+const next = qs('.slider .next');
+prev.addEventListener('click', () => track.scrollBy({left: -track.clientWidth, behavior:'smooth'}));
+next.addEventListener('click', () => track.scrollBy({left: track.clientWidth, behavior:'smooth'}));
+
+// Cart logic
 const state = {
-  products: [
-    {id:1, name:'Croissant Royale', price:28000, img:'assets/img/product-1.svg'},
-    {id:2, name:'Baguette Classic', price:22000, img:'assets/img/product-2.svg'},
-    {id:3, name:'Pain au Chocolat', price:32000, img:'assets/img/product-3.svg'},
-    {id:4, name:'Sourdough Loaf', price:38000, img:'assets/img/product-4.svg'},
-    {id:5, name:'Macaron Assortie (6)', price:55000, img:'assets/img/product-5.svg'},
-  ],
-  testimonials: [
-    {name:'Nadia', text:'Rotinya fresh banget, makaronnya juara!', rating:5},
-    {name:'Rafi', text:'Croissant paling flaky di Jakarta.', rating:5},
-    {name:'Maya', text:'Harga bersahabat, ambience toko elegan.', rating:4}
-  ],
-  cart: JSON.parse(localStorage.getItem('lb_cart')||'[]')
+  items: [],
 };
 
-// Helpers
-const formatIDR = v => v.toLocaleString('id-ID');
-const qs = (s, el=document) => el.querySelector(s);
-const qsa = (s, el=document) => [...el.querySelectorAll(s)];
+const cartDrawer = qs('#cartDrawer');
+const cartButton = qs('#cartButton');
+const closeCart = qs('#closeCart');
+const cartItems = qs('#cartItems');
+const cartCount = qs('#cartCount');
+const cartTotal = qs('#cartTotal');
+const checkoutButton = qs('#checkoutButton');
+const checkoutTop = qs('#checkoutTop');
 
-function saveCart(){ localStorage.setItem('lb_cart', JSON.stringify(state.cart)); updateCartBadge(); renderCartTable(); }
-
-function addToCart(id){
-  const item = state.cart.find(it => it.id === id);
-  if(item){ item.qty += 1; } else {
-    const p = state.products.find(p => p.id === id);
-    state.cart.push({id:p.id, name:p.name, price:p.price, qty:1});
-  }
-  saveCart();
-  toast('Ditambahkan ke keranjang');
+function saveCart(){ localStorage.setItem('cart', JSON.stringify(state.items)); }
+function loadCart(){ state.items = JSON.parse(localStorage.getItem('cart') || '[]'); renderCart(); }
+function addToCart(id, qty=1){
+  const found = state.items.find(i=> i.id === id);
+  const product = PRODUCTS.find(p=> p.id === id);
+  if(!product) return;
+  if(found){ found.qty += qty; } else { state.items.push({id, qty}); }
+  renderCart(); saveCart();
+  openCart();
 }
+function removeFromCart(id){ state.items = state.items.filter(i=> i.id !== id); renderCart(); saveCart(); }
+function setQty(id, qty){ const it = state.items.find(i=> i.id === id); if(it){ it.qty = Math.max(1, qty|0); renderCart(); saveCart(); } }
+function openCart(){ cartDrawer.classList.add('open'); cartDrawer.setAttribute('aria-hidden','false'); }
+function closeCartDrawer(){ cartDrawer.classList.remove('open'); cartDrawer.setAttribute('aria-hidden','true'); }
 
-function removeFromCart(id){
-  state.cart = state.cart.filter(it => it.id !== id);
-  saveCart();
-}
-
-function changeQty(id, delta){
-  const item = state.cart.find(it => it.id === id);
-  if(!item) return;
-  item.qty = Math.max(1, item.qty + delta);
-  saveCart();
-}
-
-function updateCartBadge(){
-  const count = state.cart.reduce((a,b)=>a+b.qty,0);
-  qs('#cart-badge').textContent = count;
-}
-
-function renderProducts(){
-  const grid = qs('#product-grid');
-  grid.innerHTML = state.products.map(p => `
-    <div class="card product reveal">
-      <img src="${p.img}" alt="${p.name}">
-      <div class="title">${p.name}</div>
-      <div class="price">Rp ${formatIDR(p.price)}</div>
-      <div class="cta">
-        <button class="btn" aria-label="Tambahkan ${p.name}" data-add="${p.id}">+ Keranjang</button>
-        <button class="btn gold" aria-label="Checkout cepat ${p.name}" data-buy="${p.id}">Beli Sekarang</button>
-      </div>
-      <div class="tag">Best seller</div>
-    </div>
-  `).join('');
-
-  grid.addEventListener('click', e => {
-    const add = e.target.closest('[data-add]');
-    const buy = e.target.closest('[data-buy]');
-    if(add){ addToCart(+add.dataset.add); }
-    if(buy){ addToCart(+buy.dataset.buy); openCart(); }
-  });
-}
-
-function renderSlider(){
-  const slidesEl = qs('.slides');
-  const top5 = state.products.slice(0,5);
-  slidesEl.innerHTML = top5.map(p => `
-    <div class="slide">
-      <img src="${p.img}" alt="${p.name}">
-      <div class="info">
-        <span class="badge">Terlaris</span>
-        <h4>${p.name}</h4>
-        <p>Rasa autentik Prancis — dibuat harian dengan bahan premium.</p>
-        <div class="price">Rp ${formatIDR(p.price)}</div>
-        <div style="margin-top:.5rem;display:flex;gap:.5rem">
-          <button class="btn" onclick="addToCart(${p.id})">+ Keranjang</button>
-          <button class="btn gold" onclick="addToCart(${p.id}); openCart()">Checkout</button>
+function renderCart(){
+  cartItems.innerHTML = '';
+  let total = 0;
+  state.items.forEach(it => {
+    const p = PRODUCTS.find(pp=> pp.id === it.id);
+    if(!p) return;
+    total += p.price * it.qty;
+    const li = document.createElement('li');
+    li.className = 'cart-item';
+    li.innerHTML = `
+      <img src="assets/img/${p.img}" alt="${p.name}" />
+      <div style="flex:1">
+        <div style="font-weight:700">${p.name}</div>
+        <div class="meta">${rp(p.price)} × 
+          <input type="number" min="1" value="${it.qty}" style="width:60px; padding:.3rem; margin-left:.3rem" />
         </div>
       </div>
-    </div>
-  `).join('');
-
-  let index = 0;
-  const update = ()=> slidesEl.style.transform = `translateX(-${index*100}%)`;
-  qs('.next').onclick = ()=>{ index = (index+1)%top5.length; update(); };
-  qs('.prev').onclick = ()=>{ index = (index-1+top5.length)%top5.length; update(); };
-  setInterval(()=>{ index = (index+1)%top5.length; update(); }, 5000);
-}
-
-function renderTestimonials(){
-  const wrap = qs('#testimonials');
-  const stored = JSON.parse(localStorage.getItem('lb_testi')||'[]');
-  const all = [...state.testimonials, ...stored];
-  wrap.innerHTML = all.map(t => `
-    <div class="card reveal">
-      <strong>${t.name}</strong>
-      <div class="small">${'★'.repeat(t.rating||5)}</div>
-      <p style="margin:.5rem 0 0">${t.text}</p>
-    </div>
-  `).join('');
-}
-
-function handleForms(){
-  // Kritik & saran
-  qs('#feedback-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    e.target.reset();
-    toast('Terima kasih atas masukannya!');
+      <button class="icon-btn" aria-label="Hapus">🗑️</button>
+    `;
+    li.querySelector('input').addEventListener('input', (e)=> setQty(p.id, +e.target.value));
+    li.querySelector('button').addEventListener('click', ()=> removeFromCart(p.id));
+    cartItems.appendChild(li);
   });
-
-  // Input testimoni
-  qs('#testi-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const data = new FormData(e.target);
-    const entry = {
-      name: data.get('name') || 'Anonim',
-      text: data.get('text') || '',
-      rating: +data.get('rating') || 5
-    };
-    const list = JSON.parse(localStorage.getItem('lb_testi')||'[]');
-    list.push(entry);
-    localStorage.setItem('lb_testi', JSON.stringify(list));
-    renderTestimonials();
-    e.target.reset();
-    toast('Testimoni ditambahkan!');
-  });
+  cartCount.textContent = state.items.reduce((a,b)=> a+b.qty, 0);
+  cartTotal.textContent = rp(total);
 }
 
-function renderCartTable(){
-  const body = qs('#cart-body');
-  const emptyRow = `<tr><td colspan="5" style="text-align:center;color:#cfc7ff">Keranjang masih kosong</td></tr>`;
-  if(!body) return;
-  body.innerHTML = state.cart.length ? state.cart.map(it => `
-    <tr>
-      <td>${it.name}</td>
-      <td>Rp ${formatIDR(it.price)}</td>
-      <td>
-        <button class="btn ghost" onclick="changeQty(${it.id},-1)">−</button>
-        <span style="display:inline-block;min-width:24px;text-align:center">${it.qty}</span>
-        <button class="btn ghost" onclick="changeQty(${it.id},1)">+</button>
-      </td>
-      <td>Rp ${formatIDR(it.qty*it.price)}</td>
-      <td><button class="btn" onclick="removeFromCart(${it.id})">Hapus</button></td>
-    </tr>
-  `).join('') : emptyRow;
-
-  const total = state.cart.reduce((a,b)=>a+b.qty*b.price,0);
-  qs('#cart-total').textContent = 'Rp ' + formatIDR(total);
-}
-
-function openCart(){ qs('#cart-modal').classList.add('open'); renderCartTable(); }
-function closeCart(){ qs('#cart-modal').classList.remove('open'); }
-
-function checkout(){
-  if(!state.cart.length){ toast('Keranjang kosong'); return; }
-  const total = state.cart.reduce((a,b)=>a+b.qty*b.price,0);
-  alert('Checkout sukses! Total: Rp ' + formatIDR(total) + '\nTerima kasih berbelanja di Levant Boulangerie.');
-  state.cart = [];
-  saveCart();
-  closeCart();
-}
-
-// Reveal on scroll
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(en=>{
-    if(en.isIntersecting){ en.target.classList.add('show'); io.unobserve(en.target); }
-  });
-},{threshold:.12});
-
-function toast(msg){
-  const el = qs('#toast'); el.textContent = msg; el.classList.add('show');
-  setTimeout(()=>el.classList.remove('show'), 2000);
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  renderSlider();
-  renderProducts();
-  renderTestimonials();
-  handleForms();
-  updateCartBadge();
-  qsa('.reveal').forEach(el=>io.observe(el));
-  qs('#open-cart').addEventListener('click', openCart);
-  qs('#close-cart').addEventListener('click', closeCart);
-  qs('#checkout').addEventListener('click', checkout);
+document.addEventListener('click', (e)=>{
+  const add = e.target.closest('[data-add]');
+  const buy = e.target.closest('[data-buy]');
+  if(add){ addToCart(add.dataset.add, 1); }
+  if(buy){ addToCart(buy.dataset.buy, 1); openCart(); }
 });
+
+cartButton.addEventListener('click', openCart);
+closeCart.addEventListener('click', closeCartDrawer);
+
+// Checkout buttons
+function checkout(){
+  if(state.items.length === 0){ alert('Keranjang masih kosong.'); return; }
+  const summary = state.items.map(it=> {
+    const p = PRODUCTS.find(pp=> pp.id === it.id);
+    return `• ${p.name} x ${it.qty} = ${rp(p.price*it.qty)}`;
+  }).join('\n');
+  alert('Checkout sukses (demo)!\n\nRincian:\n' + summary + '\n\nTerima kasih.');
+  state.items = []; saveCart(); renderCart(); closeCartDrawer();
+}
+checkoutButton.addEventListener('click', checkout);
+checkoutTop.addEventListener('click', checkout);
+
+// Testimonials
+const DEFAULT_TESTIMONIALS = [
+  { nama: "Alya", pesan: "Pelayanan sangat elegan, kemasannya pun mewah." },
+  { nama: "Rama", pesan: "Produk original dan finishing-nya sempurna." },
+  { nama: "Sinta", pesan: "Pengiriman cepat, packing rapi. Recommended!" }
+];
+
+function loadTestimonials(){
+  const saved = JSON.parse(localStorage.getItem('testimonials') || 'null');
+  return saved && Array.isArray(saved) ? saved : DEFAULT_TESTIMONIALS.slice();
+}
+function saveTestimonials(list){ localStorage.setItem('testimonials', JSON.stringify(list)); }
+function renderTestimonials(list){
+  const ul = qs('#testimonialList');
+  ul.innerHTML = '';
+  list.forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${t.nama}</strong><p>${t.pesan}</p>`;
+    ul.appendChild(li);
+  });
+}
+
+const tForm = qs('#testimonialForm');
+let testimonials = loadTestimonials();
+renderTestimonials(testimonials);
+
+tForm.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const nama = qs('#nama').value.trim();
+  const pesan = qs('#pesan').value.trim();
+  if(!nama || !pesan) return;
+  testimonials.unshift({nama, pesan});
+  saveTestimonials(testimonials);
+  renderTestimonials(testimonials);
+  tForm.reset();
+  alert('Terima kasih untuk testimoninya!');
+});
+
+// Feedback form (kritik & saran)
+qs('#feedbackForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const email = qs('#email').value.trim();
+  const subjek = qs('#subjek').value.trim();
+  const isi = qs('#isi').value.trim();
+  console.log('Feedback terkirim (demo):', {{ email, subjek, isi }});
+  alert('Terima kasih atas masukan Anda!');
+  e.target.reset();
+});
+
+// Init
+loadCart();
